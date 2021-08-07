@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}View List{% endblock %}
+{% load static %}
+{% block extra_header_links %}
+    <link rel="stylesheet" href="{% static 'grocery_list/css/style.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <!-- top -->
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>View Grocery List</h1>
+            </div>
+            <div class="col-lg-6 float-right">
+                <div class="row">
+                    <form method="post" enctype="multipart/form-data" class="col-lg-8">
+                        {% csrf_token %}
+                        <div class="col-lg-8">
+                            <!-- Date Filtering-->
+                            <input type="date" class="form-control" name="date">
+                        </div>
+                        <div class="col-lg-4" style="margin: 10px 0">
+                            <input type="submit" class="btn btn-info" value="filter">
+                        </div>
+                    </form>
+                    <div class="col-lg-4">
+                        <button type="button" class="btn btn-danger"><a href="{% url 'logout' %}" class="btn-logout">logout</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // top -->
+        <!-- Grocery Cards -->
+        <div class="create-container">
+            <a href="{% url 'grocery:create' %}" class="btn-create">Create</a>
+        </div>
+        <div class="row mt-4">
+            <!--- -->
+            <!-- Loop This -->
+            {% for grocery in grocery_list %}
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ grocery.item_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ grocery.item_quantity }}</h6>
+                            {% if grocery.item_status == 3 %}
+                                <p class="text-info">{{ grocery.get_item_status_display }}</p>
+                            {% elif grocery.item_status == 2 %}
+                                <p class="text-danger">{{ grocery.get_item_status_display }}</p>
+                            {% elif grocery.item_status == 1 %}
+                                <p class="text-success">{{ grocery.get_item_status_display }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-container">
+                            <button type="button" class="btn btn-dark card-link-delete">
+                                <a href="{% url "grocery:update" grocery.pk %}">Update</a>
+                            </button>
+                            <form method="post" action="{% url "grocery:delete" grocery.pk %}" class="delete-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

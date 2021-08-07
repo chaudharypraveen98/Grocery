@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Signup{% endblock %}
+{% load static %}
+{% block extra_header_links %}
+    <link rel="stylesheet" type="text/css" href="{% static 'grocery_list/css/login.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="login-wrap"
+         style="{bacground-image: url(https://images.theconversation.com/files/282104/original/file-20190701-105182-1q7a7ji.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=900.0&fit=crop); background-repeat: no-repeat;position: center}">
+        <div class="login-html">
+            <h2 class="form-head">Sign UP</h2>
+            <div class="login-form">
+                <form enctype="multipart/form-data" method="post" class="login" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="group">
+                            <span class="text-danger small">{{ field.errors }}</span>
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="group">
+                        <input type="submit" class="button" value="Sign Up">
+                    </div>
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <label for="tab-1"><a href="{% url 'login' %}" class="register-link">Already Member?</a></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block external_script %}
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+{% endblock %}
